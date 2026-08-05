@@ -14,10 +14,6 @@ output/
 # Upload hasil API
 uploads/
 
-# Model jika terlalu besar
-models/*.keras
-models/*.h5
-
 # Environment
 .env
 
