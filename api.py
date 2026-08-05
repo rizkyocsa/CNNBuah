@@ -17,9 +17,8 @@ import os
 
 load_dotenv()
 
-MODEL_PATH = os.getenv("MODEL_PATH")
-UPLOAD_FOLDER = os.getenv("UPLOAD_FOLDER")
-
+MODEL_PATH = os.getenv("MODEL_PATH", "models/model_jeruk.keras")
+UPLOAD_FOLDER = os.getenv("UPLOAD_FOLDER", "uploads")
 DATABASE_URL = os.getenv("DATABASE_URL")
 
 HOST = os.getenv("HOST", "0.0.0.0")
