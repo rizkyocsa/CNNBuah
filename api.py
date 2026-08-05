@@ -449,3 +449,12 @@ def latest():
                 "message": str(e)
             }
         )
+
+if __name__ == "__main__":
+    import uvicorn
+
+    uvicorn.run(
+        "api:app",
+        host=HOST,
+        port=PORT
+    )
