@@ -6,6 +6,11 @@ __pycache__/
 # Dataset
 dataset/
 
+# Dataset
+hasil/
+history/
+output/
+
 # Upload hasil API
 uploads/
 
