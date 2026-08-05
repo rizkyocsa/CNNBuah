@@ -5,12 +5,25 @@ import numpy as np
 import tensorflow as tf
 
 from PIL import Image
-from datetime import datetime
+from datetime import datetime, date
 from fastapi import FastAPI, UploadFile, File, Request
 from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from psycopg2.extras import RealDictCursor
+
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
+MODEL_PATH = os.getenv("MODEL_PATH")
+UPLOAD_FOLDER = os.getenv("UPLOAD_FOLDER")
+
+DATABASE_URL = os.getenv("DATABASE_URL")
+
+HOST = os.getenv("HOST", "0.0.0.0")
+PORT = int(os.getenv("PORT", 8000))
 
 # ====================================================
 # KONFIGURASI
@@ -24,28 +37,10 @@ CLASS_NAMES = [
     "terlalu_matang"
 ]
 
-MODEL_PATH = "models/model_jeruk.keras"
-
-UPLOAD_FOLDER = "uploads"
-
-# ====================================================
-# DATABASE
-# ====================================================
-
-DB_HOST = "postgres.railway.internal"
-DB_PORT = "5432"
-DB_NAME = "railway"
-DB_USER = "postgres"
-DB_PASSWORD = "JPeVETXbpemmiSEtNRwnSfjvddtSIJBH"
-
 def get_connection():
 
     return psycopg2.connect(
-        host=DB_HOST,
-        port=DB_PORT,
-        database=DB_NAME,
-        user=DB_USER,
-        password=DB_PASSWORD,
+        DATABASE_URL,
         cursor_factory=RealDictCursor
     )
 
@@ -218,10 +213,11 @@ async def predict(
                 confidence,
                 belum_matang,
                 matang,
-                terlalu_matang
+                terlalu_matang,
+                create_at
             )
             VALUES
-            (%s,%s,%s,%s,%s,%s,%s)
+            (%s,%s,%s,%s,%s,%s,%s,%s)
             """,
             (
                 filename,
@@ -230,7 +226,8 @@ async def predict(
                 round(confidence * 100, 2),
                 detail["belum_matang"],
                 detail["matang"],
-                detail["terlalu_matang"]
+                detail["terlalu_matang"],
+                date.today()
             )
         )
 
@@ -263,10 +260,7 @@ async def predict(
 
                 "detail": detail,
 
-                "created_at": datetime.now().strftime(
-                    "%Y-%m-%d %H:%M:%S"
-                )
-
+                "create_at": date.today().isoformat()
             }
 
         )
@@ -308,9 +302,9 @@ def history():
                 image_url,
                 prediction,
                 confidence,
-                created_at
+                create_at
             FROM hasil_prediksi
-            ORDER BY created_at DESC
+            ORDER BY create_at DESC
 
         """)
 
@@ -359,7 +353,7 @@ def detail_history(id: int):
                 belum_matang,
                 matang,
                 terlalu_matang,
-                created_at
+                create_at
             FROM hasil_prediksi
             WHERE id=%s
 
@@ -419,9 +413,9 @@ def latest():
                 belum_matang,
                 matang,
                 terlalu_matang,
-                created_at
+                create_at
             FROM hasil_prediksi
-            ORDER BY created_at DESC
+            ORDER BY create_at DESC
             LIMIT 1
             """
         )
