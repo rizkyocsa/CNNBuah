@@ -303,7 +303,7 @@ def history():
                 confidence,
                 create_at
             FROM hasil_prediksi
-            ORDER BY create_at DESC
+            ORDER BY id DESC
 
         """)
 
@@ -414,7 +414,7 @@ def latest():
                 terlalu_matang,
                 create_at
             FROM hasil_prediksi
-            ORDER BY create_at DESC
+            ORDER BY id DESC
             LIMIT 1
             """
         )
