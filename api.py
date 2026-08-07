@@ -28,7 +28,7 @@ PORT = int(os.getenv("PORT", 8000))
 # KONFIGURASI
 # ====================================================
 
-IMAGE_SIZE = (224, 224)
+IMAGE_SIZE = (224, 244)
 
 CLASS_NAMES = [
     "belum_matang",

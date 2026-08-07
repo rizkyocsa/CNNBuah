@@ -14,7 +14,7 @@ from collections import Counter
 
 DATASET_PATH = "dataset"
 
-IMAGE_SIZE = (224, 224)
+IMAGE_SIZE = (224, 244)
 
 BATCH_SIZE = 8
 
@@ -192,7 +192,7 @@ print("===================================")
 model = tf.keras.Sequential([
 
     # Input Layer
-    tf.keras.layers.Input(shape=(224, 224, 3)),
+    tf.keras.layers.Input(shape=(224, 244, 3)),
     data_augmentation,
 
     # ======================================
@@ -234,7 +234,7 @@ model = tf.keras.Sequential([
     # ======================================
 
     tf.keras.layers.Conv2D(
-        filters=64,
+        filters=128,
         kernel_size=(3,3),
         padding="same",
         activation="relu"
